@@ -66,7 +66,8 @@ export default async function handler(req, res) {
             thesis_id, name, description, writeup,
             thesis_relevance, recency, founding_team, total_score,
             website, x_url, crunchbase_url, founded_year,
-            fit_type, discovered_via_theme
+            fit_type, discovered_via_theme,
+            funding_stage, last_funding_type, sources
           )
           VALUES (
             ${newThesis.id},
@@ -82,7 +83,10 @@ export default async function handler(req, res) {
             ${event.data.crunchbase_url || null},
             ${event.data.founded_year || null},
             ${event.data.fit_type || 'direct'},
-            ${event.data.discovered_via_theme || null}
+            ${event.data.discovered_via_theme || null},
+            ${event.data.funding_stage || 'unknown'},
+            ${event.data.last_funding_type || null},
+            ${event.data.sources ? JSON.stringify(event.data.sources) : null}::jsonb
           )
           RETURNING *
         `;
