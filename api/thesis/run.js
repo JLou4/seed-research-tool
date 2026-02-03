@@ -1,5 +1,6 @@
 import { getDb } from '../../lib/db.js';
-import { runResearch } from '../../lib/research.js';
+// Using simple version - just Claude with extended thinking, no API dependencies
+import { runResearchSimple as runResearch } from '../../lib/research-simple.js';
 
 export const config = {
   maxDuration: 60, // Allow up to 60 seconds for research
