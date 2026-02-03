@@ -86,13 +86,15 @@ export default async function handler(req, res) {
         companies.push(savedCompany);
         sendEvent('company', savedCompany);
       } else if (event.type === 'complete') {
-        // Update thesis with summary and public comps
+        // Update thesis with summary, public comps, and adjacent themes
+        const adjacentThemes = event.data.adjacent_themes || [];
         await sql`
           UPDATE theses SET
             status = 'complete',
             completed_at = NOW(),
             summary = ${event.data.summary || ''},
-            public_comps = ${event.data.public_comps || []}
+            public_comps = ${event.data.public_comps || []},
+            adjacent_themes = ${JSON.stringify(adjacentThemes)}
           WHERE id = ${newThesis.id}
         `;
         
@@ -100,6 +102,7 @@ export default async function handler(req, res) {
           thesis_id: newThesis.id,
           summary: event.data.summary,
           public_comps: event.data.public_comps,
+          adjacent_themes: adjacentThemes,
           company_count: companies.length
         });
       } else if (event.type === 'error') {
