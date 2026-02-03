@@ -15,7 +15,7 @@
   ],
   "functions": {
     "api/thesis/run.js": {
-      "maxDuration": 60
+      "maxDuration": 120
     }
   }
 }
