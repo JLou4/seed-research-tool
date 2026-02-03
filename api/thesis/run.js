@@ -88,13 +88,18 @@ export default async function handler(req, res) {
       } else if (event.type === 'complete') {
         // Update thesis with summary, public comps, and adjacent themes
         const adjacentThemes = event.data.adjacent_themes || [];
+        const discoveryStats = event.data.discovery_stats || null;
+        
+        // JSONB columns need the object passed directly (neon driver handles conversion)
+        // or cast explicitly with ::jsonb
         await sql`
           UPDATE theses SET
             status = 'complete',
             completed_at = NOW(),
             summary = ${event.data.summary || ''},
             public_comps = ${event.data.public_comps || []},
-            adjacent_themes = ${JSON.stringify(adjacentThemes)}
+            adjacent_themes = ${JSON.stringify(adjacentThemes)}::jsonb,
+            discovery_stats = ${discoveryStats ? JSON.stringify(discoveryStats) : null}::jsonb
           WHERE id = ${newThesis.id}
         `;
         
