@@ -1,9 +1,9 @@
 import { getDb } from '../../lib/db.js';
-// Using simple version - just Claude with extended thinking, no API dependencies
-import { runResearchSimple as runResearch } from '../../lib/research-simple.js';
+// Using full search-first research: Brave + Crunchbase search, fit filter, then Claude analysis
+import { runResearch } from '../../lib/research.js';
 
 export const config = {
-  maxDuration: 60, // Allow up to 60 seconds for research
+  maxDuration: 120, // Allow up to 120 seconds for search + analysis pipeline
 };
 
 export default async function handler(req, res) {
