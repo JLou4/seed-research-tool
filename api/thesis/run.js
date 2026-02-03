@@ -93,9 +93,10 @@ export default async function handler(req, res) {
         companies.push(savedCompany);
         sendEvent('company', savedCompany);
       } else if (event.type === 'complete') {
-        // Update thesis with summary, public comps, and adjacent themes
+        // Update thesis with summary, public comps, adjacent themes, and thesis sources
         const adjacentThemes = event.data.adjacent_themes || [];
         const discoveryStats = event.data.discovery_stats || null;
+        const thesisSources = event.data.thesis_sources || [];
         
         // JSONB columns need the object passed directly (neon driver handles conversion)
         // or cast explicitly with ::jsonb
@@ -106,7 +107,8 @@ export default async function handler(req, res) {
             summary = ${event.data.summary || ''},
             public_comps = ${event.data.public_comps || []},
             adjacent_themes = ${JSON.stringify(adjacentThemes)}::jsonb,
-            discovery_stats = ${discoveryStats ? JSON.stringify(discoveryStats) : null}::jsonb
+            discovery_stats = ${discoveryStats ? JSON.stringify(discoveryStats) : null}::jsonb,
+            thesis_sources = ${thesisSources.length > 0 ? JSON.stringify(thesisSources) : null}::jsonb
           WHERE id = ${newThesis.id}
         `;
         
@@ -115,6 +117,7 @@ export default async function handler(req, res) {
           summary: event.data.summary,
           public_comps: event.data.public_comps,
           adjacent_themes: adjacentThemes,
+          thesis_sources: thesisSources,
           company_count: companies.length
         });
       } else if (event.type === 'error') {
