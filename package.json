@@ -1,0 +1,14 @@
+{
+  "name": "seed-syndicate-api",
+  "version": "1.0.0",
+  "description": "Backend API for Seed Syndicate Automator",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@neondatabase/serverless": "^0.10.4"
+  }
+}
