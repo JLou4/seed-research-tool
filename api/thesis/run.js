@@ -55,10 +55,15 @@ export default async function handler(req, res) {
         sendEvent('progress', { message: event.message });
       } else if (event.type === 'company') {
         // Save company to database
+        const thesisRelevance = event.data.thesis_relevance || 5;
+        const recency = event.data.recency || 5;
+        const foundingTeam = event.data.founding_team || 5;
+        const totalScore = thesisRelevance + recency + foundingTeam;
+        
         const [savedCompany] = await sql`
           INSERT INTO companies (
             thesis_id, name, description, writeup,
-            thesis_relevance, recency, founding_team,
+            thesis_relevance, recency, founding_team, total_score,
             website, x_url, crunchbase_url, founded_year
           )
           VALUES (
@@ -66,9 +71,10 @@ export default async function handler(req, res) {
             ${event.data.name},
             ${event.data.description || ''},
             ${event.data.writeup || ''},
-            ${event.data.thesis_relevance || 5},
-            ${event.data.recency || 5},
-            ${event.data.founding_team || 5},
+            ${thesisRelevance},
+            ${recency},
+            ${foundingTeam},
+            ${totalScore},
             ${event.data.website || null},
             ${event.data.x_url || null},
             ${event.data.crunchbase_url || null},
